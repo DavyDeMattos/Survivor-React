@@ -1,3 +1,15 @@
+# Survivor React - TP CEFIM
+
+Projet réalisé en cours sur une semaine. Petit jeu de gestion. 
+
+## Initialisation
+
+### Lancer le serveur React
+
+`npm run dev`
+
+
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
