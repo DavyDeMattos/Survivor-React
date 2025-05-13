@@ -8,7 +8,7 @@ export function QuestsList({quests, onValidateQuest}){
     //NOTE - Seul le premier élément de la liste peut être coché
     let listCount = 0;
 
-    const lastFinishedQuestIndex = quests.findLastIndex((quest) => quest.isFinished);
+    const lastFinishedQuestIndex = quests.findLastIndex((quest) => quest.isFinished === "completed");
 
     const displayQuests = quests.filter((quest) =>{
         if (listCount >= maxDisplayedQuests) return false; // Limite d'affichage
@@ -23,16 +23,28 @@ export function QuestsList({quests, onValidateQuest}){
         return false;
     });
 
+    function displayColor(quest) {
+        switch (quest.isFinished) {
+            case 'completed':
+                return 'bg-blue-100 dark:bg-blue-600 dark:border-blue-500';
+            case 'in-progress':
+                return 'bg-yellow-100 dark:bg-yellow-600 dark:border-yellow-500';
+            case 'not-started':
+                return 'bg-gray-100 dark:bg-gray-600 dark:border-gray-500';      
+            default:
+                break;
+        }
+    }
     return (
-        <div id="sticky-banner" tabIndex="-1" className="fixed top-20 start-0 z-50 flex justify-between w-1xl p-4 border-b border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-            <ul className="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHelperRadioButton">
+        // <div id="sticky-banner" tabIndex="-1" className="fixed top-20 w-2xs start-0 z-50 flex justify-between w-1xl p-4 border-b border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <ul className="bg-sky-800 flex flex-col rounded-xl border-1 border-sky-900 w-72">
                 {displayQuests.map((quest) => (
                     <li key={quest.id}>
                         <div className="flex p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                             <div className="flex items-center h-5">
                                 <input id={`helper-checkbox-${quest.id}`} name="helper-checkbox" type="checkbox" 
-                                checked={quest.isFinished} onChange={()=>onValidateQuest(quest.id)}
-                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
+                                checked={quest.isFinished === "completed"} onChange={()=>onValidateQuest(quest.id)}
+                                className={`w-4 h-4  ${displayColor(quest)} `}/>
                             </div>
                             <div className="ms-2 text-sm">
                                 <label htmlFor={`helper-checkbox-${quest.id}`} className="font-medium text-gray-900 dark:text-gray-300">
@@ -44,6 +56,6 @@ export function QuestsList({quests, onValidateQuest}){
                     </li>
                 ))}
             </ul>
-        </div>
+        // </div>
     )
 }

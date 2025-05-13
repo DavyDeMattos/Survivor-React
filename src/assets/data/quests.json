@@ -1,12 +1,12 @@
 [
-    { "id": 1, "title": "Une bonne nuit de sommeil", "description": "Créez deux cabanes pour loger les premiers aventuriers", "isFinished": false },
-    { "id": 2, "title": "Quest 2", "description": "Description of Quest 2", "isFinished": false },
-    { "id": 3, "title": "Quest 3", "description": "Description of Quest 3", "isFinished": false },
-    { "id": 4, "title": "Quest 4", "description": "Description of Quest 4", "isFinished": false },
-    { "id": 5, "title": "Quest 5", "description": "Description of Quest 5", "isFinished": false },
-    { "id": 6, "title": "Quest 6", "description": "Description of Quest 6", "isFinished": false },
-    { "id": 7, "title": "Quest 7", "description": "Description of Quest 7", "isFinished": false },
-    { "id": 8, "title": "Quest 8", "description": "Description of Quest 8", "isFinished": false },
-    { "id": 9, "title": "Quest 9", "description": "Description of Quest 9", "isFinished": false },
-    { "id": 10, "title": "Quest 10", "description": "Description of Quest 10", "isFinished": false }
+    { "id": 1, "title": "Une bonne nuit de sommeil", "description": "Créez deux cabanes pour loger les premiers aventuriers", "isFinished": "completed" },
+    { "id": 2, "title": "Quest 2", "description": "Description of Quest 2", "isFinished": "not-started" },
+    { "id": 3, "title": "Quest 3", "description": "Description of Quest 3", "isFinished": "not-started" },
+    { "id": 4, "title": "Quest 4", "description": "Description of Quest 4", "isFinished": "not-started" },
+    { "id": 5, "title": "Quest 5", "description": "Description of Quest 5", "isFinished": "not-started" },
+    { "id": 6, "title": "Quest 6", "description": "Description of Quest 6", "isFinished": "not-started" },
+    { "id": 7, "title": "Quest 7", "description": "Description of Quest 7", "isFinished": "not-started" },
+    { "id": 8, "title": "Quest 8", "description": "Description of Quest 8", "isFinished": "not-started" },
+    { "id": 9, "title": "Quest 9", "description": "Description of Quest 9", "isFinished": "not-started" },
+    { "id": 10, "title": "Quest 10", "description": "Description of Quest 10", "isFinished": "not-started" }
 ]

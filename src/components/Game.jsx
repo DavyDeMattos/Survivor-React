@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GameUi } from './GameUi';
 import { QuestsList } from './QuestsList';
+import { Map } from './Map';
+
 import questsList from '../assets/data/quests.json';
 
-export function Game() {
+export function Game({onGameOver}) {
     // const [ressources, setRessources] = useState({
     //     survivor: 0,
     //     maxSurvivor: 0,
@@ -11,8 +13,8 @@ export function Game() {
     //     wood: 5,
     //     stone: 0,
     // });
-    const [survivor, setSurvivor] = useState(0);
-    const [maxSurvivor, setMaxSurvivor] = useState(0);
+    const [survivor, setSurvivor] = useState(2);
+    const [maxSurvivor, setMaxSurvivor] = useState(2);
     const [meat, setMeat] = useState(10);
     const [wood, setWood] = useState(5);
     const [stone, setStone] = useState(0);
@@ -29,7 +31,7 @@ export function Game() {
                 if (quest.id === parseInt(questId)) {
                     return {
                         ...quest,
-                        isFinished: true,
+                        isFinished: "completed",
                     };
                 }
                 return quest;
@@ -37,20 +39,38 @@ export function Game() {
         });
     }
 
+    //NOTE - Timer diminuant la nourriture par survivant
+    useEffect(() => {
+        const foodDecrease = setInterval(() => {
+            setMeat(meat => meat - survivor);
+            console.log('decrease Food')
+        }, 10_000);
+        return () => clearInterval(foodDecrease);
+    });
+
+    useEffect(()=>{
+        if(meat < 0){
+            setMeat(0);
+            onGameOver();
+        }
+    }, [meat])
+
+
     return (
-        <div className="w-full h-full flex flex-col justify-center items-center bg-sky-700 text-white">
-            <GameUi 
-                // ressources={ressources}
-                survivor={survivor}
-                maxSurvivor={maxSurvivor}
-                meat={meat}
-                wood={wood}
-                stone={stone} 
-            />
-            <QuestsList quests={quests} onValidateQuest={handleCheckboxChange}/>
+        <div className="w-full h-full flex flex-col justify-start items-center bg-blue-50 p-2">
+            <div className="flex items-start w-full gap-2">
+                <QuestsList quests={quests} onValidateQuest={handleCheckboxChange}/>
+                <GameUi
+                    // ressources={ressources}
+                    survivor={survivor}
+                    maxSurvivor={maxSurvivor}
+                    meat={meat}
+                    wood={wood}
+                    stone={stone}
+                />
+            </div>
             <h1>Game</h1>
-            <button type="button" className='bg-amber-50 text-black' onClick={updateMaxSurvivor}>Add Max Survivor</button>
-            <p>Game content goes here...</p>
+            <Map />
         </div>
     )
 }
