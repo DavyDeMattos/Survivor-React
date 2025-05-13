@@ -20,6 +20,9 @@ export function Game({onGameOver}) {
     const [wood, setWood] = useState(5);
     const [stone, setStone] = useState(0);
     const [mapData, setMapdata] = useState(dataMapGame);
+    const [time, setTime] = useState(0);
+
+
     function updateMeat() {
         setMeat(meat + 5);
     }
@@ -44,6 +47,12 @@ export function Game({onGameOver}) {
     }
 
     //NOTE - Timer diminuant la nourriture par survivant
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setTime(1;)
+    //     }, 1_000);
+    //     return () => clearInterval(interval);
+    // });
     useEffect(() => {
         const foodDecrease = setInterval(() => {
             setMeat(meat => meat - survivor);
@@ -67,17 +76,21 @@ export function Game({onGameOver}) {
     /* -------------------------------------------------------------------------- */
     /*                               //SECTION - Map                              */
     /* -------------------------------------------------------------------------- */
+    // function handleCell(key, position){
     function handleCell(key){
-        console.log(key[0], key[2]);
-        const i = key[0];
-        const j = key[2];
-        if(mapData[i][j].type == "empty" && wood >= 5){
-            mapData[i][j] = {type : 'cabin'};
+        console.log({key})
+        // console.log(key[0], key[2]);
+        // const i = key[0];
+        // const j = key[2];
+        // const updatedCells = mapData.map((row) => row.map((cell) => ({...cell})));
+        // const cell = updatedCells[position.y][position.x];
+        if(mapData[key.y][key.x].type == "empty" && wood >= 5){
+            mapData[key.y][key.x] = {type : 'house'};
             setSurvivor( survivor => survivor + 2)
             setWood(wood => wood - 5);
-
         }
-        setMapdata([...mapData])
+        setMapdata(mapData)
+        console.log({mapData})
     }
 
     //!SECTION
