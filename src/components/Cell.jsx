@@ -6,7 +6,7 @@ import TreeIcon from '../assets/img/icons/tree.svg'
 import Tree2Icon from '../assets/img/icons/tree2.svg'
 import WheatIcon from '../assets/img/icons/wheat.svg'
 
-export function Cell({type}){
+export function Cell({index, type, handleCell}){
     let iconsSource = null;
     switch (type) {
         case "barn":
@@ -34,6 +34,6 @@ export function Cell({type}){
             break;
     }
     return (
-        <img src={iconsSource} className="h-16 w-16  rounded-lg" type={type} onClick={()=>console.log(type)}/>
+        <img src={iconsSource} className="h-16 w-16  rounded-lg" type={type} onClick={()=>handleCell(index)}/>
     )
 }
