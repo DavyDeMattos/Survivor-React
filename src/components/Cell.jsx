@@ -6,8 +6,34 @@ import TreeIcon from '../assets/img/icons/tree.svg'
 import Tree2Icon from '../assets/img/icons/tree2.svg'
 import WheatIcon from '../assets/img/icons/wheat.svg'
 
-export function Cell(){
+export function Cell({type}){
+    let iconsSource = null;
+    switch (type) {
+        case "barn":
+            iconsSource = BarnIcon;
+            break;
+        case "house":
+            iconsSource = CabinIcon;
+            break;
+        case "mine":
+            iconsSource = MineIcon;
+            break;
+        case "mountain":
+            iconsSource = MountainIcon;
+            break;
+        case "forest":
+            iconsSource = TreeIcon;
+            break;
+        case "forest2":
+            iconsSource = Tree2Icon;
+            break;
+        case "wheat":
+            iconsSource = WheatIcon;
+            break;
+        default:
+            break;
+    }
     return (
-        <img src={BarnIcon} className='w-15'/>
+        <img src={iconsSource} className="h-16 w-16  rounded-lg" type={type} onClick={()=>console.log(type)}/>
     )
 }

@@ -4,6 +4,7 @@ import { QuestsList } from './QuestsList';
 import { Map } from './Map';
 
 import questsList from '../assets/data/quests.json';
+import mapData from '../assets/data/map.json'
 
 export function Game({onGameOver}) {
     // const [ressources, setRessources] = useState({
@@ -19,8 +20,11 @@ export function Game({onGameOver}) {
     const [wood, setWood] = useState(5);
     const [stone, setStone] = useState(0);
 
-    function updateMaxSurvivor() {
-        setMaxSurvivor(maxSurvivor + 1);
+    function updateMeat() {
+        setMeat(meat + 5);
+    }
+    function updateSurvivor() {
+        setSurvivor(survivor + 5);
     }
 
     const [quests, setQuests] = useState(questsList);
@@ -43,15 +47,14 @@ export function Game({onGameOver}) {
     useEffect(() => {
         const foodDecrease = setInterval(() => {
             setMeat(meat => meat - survivor);
-            console.log('decrease Food')
-        }, 10_000);
+        }, 3_000);
         return () => clearInterval(foodDecrease);
     });
 
     useEffect(()=>{
         if(meat < 0){
-            setMeat(0);
-            onGameOver();
+            // setMeat(0);
+            // onGameOver();
         }
     }, [meat])
 
@@ -70,7 +73,9 @@ export function Game({onGameOver}) {
                 />
             </div>
             <h1>Game</h1>
-            <Map />
+            <button type="button" onClick={updateMeat}>Add Food</button>
+            <button type="button" onClick={updateSurvivor}>Add Survivor</button>
+            <Map mapData={mapData}/>
         </div>
     )
 }

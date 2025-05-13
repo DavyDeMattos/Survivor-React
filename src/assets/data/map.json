@@ -1,0 +1,37 @@
+[
+    [
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "forest"},
+        {"type": "empty"}
+    ],
+    [
+        {"type": "empty"},
+        {"type": "house"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"}
+    ],
+    [
+        {"type": "mountain"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"}
+    ],
+    [
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"}
+    ],
+    [
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"},
+        {"type": "empty"}
+    ]
+]
