@@ -10,7 +10,6 @@ export const useGameState = create((set, get) => ({
     wood: 10,
     food: 10,
     people: 0,
-    maxPeople: 0,
     time: 0,
     cells: [...defaultMap],
     currentScore: 0,
@@ -56,7 +55,7 @@ export const useGameState = create((set, get) => ({
         console.log("cell.people")
         console.log({cell})
         if(people > 0){
-            set({ people: people -1 });
+            // set({ people: people -1 });
             cell.people = cell.people + 1;
         }
         return cell;

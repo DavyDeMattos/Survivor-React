@@ -17,7 +17,8 @@ export function Map() {
                 cells.map((row, rowIndex) => {
                     return row.map((cell, colIndex) => {
                         return <Cell 
-                            type={cell.type} 
+                            type={cell.type}
+                            people={cell.people}
                             onClick={()=>handleClick({ x: colIndex, y: rowIndex })}
                             key={`${colIndex}-${rowIndex}`}
                         />;
