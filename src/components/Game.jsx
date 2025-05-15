@@ -2,31 +2,18 @@ import { useEffect, useState } from 'react';
 import { GameUi } from './GameUi';
 import { QuestsList } from './QuestsList';
 import { Map } from './Map';
-import { useRessource } from '../store/ressource';
+import { useStore } from '../store/store';
 
 import questsList from '../assets/data/quests.json';
-import dataMapGame from '../assets/data/map.json'
-import { useStore } from 'zustand';
 
 export function Game({onGameOver}) {
-    const { survivor,addSurvivor,maxSurvivor,meat,wood,stone } = useRessource()
-    const clear = useRessource((state) => state.clear)
-    // const survivor = useRessource((state) => state.survivor);
-    // const addSurvivor = useRessource((state) => state.addSurvivor);
-    // const maxSurvivor = useRessource((state) => state.maxSurvivor);
-    // const meat = useRessource((state) => state.meat);
-    // const wood = useRessource((state) => state.wood);
-    // const stone = useRessource((state) => state.stone);
-
-    // Génération manuelle de la carte et de ses cellules
-    const [mapData, setMapdata] = useState(new Array(5).fill(null).map(() => new Array(5).fill({ type: 'empty' })));
+    const { survivor,addSurvivor,maxSurvivor,meat,wood,stone, mapData, clear, decreaseMeat, setMeat, } = useStore();
 
     const [time, setTime] = useState(0);
 
 
     function updateMeat() {
-        // setMeat(meat + 5);
-        useRessource.setState(() => ({ meat: 46 }));
+        setMeat(50)
     }
     function updateSurvivor() {
         addSurvivor(5);
@@ -50,34 +37,29 @@ export function Game({onGameOver}) {
 
     //NOTE - Timer diminuant la nourriture par survivant
     useEffect(() => {
+        clear();
         const interval = setInterval(()=>{
             setTime((prev) => prev + 1);
         },1000);
         return () => {
             clearInterval(interval);
-            clear(); // Remet à zéro les ressources
+            clear();
         }
     },[]);
 
     useEffect(() => {
         if(time % 1 == 0){
-            useRessource.setState((state) => ({ meat: state.meat - state.survivor }));
+            decreaseMeat();
         }
     }, [time]);
 
     useEffect(()=>{
         if(meat < 0){
-            useRessource.setState(() => ({ meat: 0 }));
+            setMeat(0);
             onGameOver(time);
         }
     }, [meat])
     
-    useEffect(()=>{
-        if(survivor >= maxSurvivor){
-            // useRessource.setState(() => ({ maxSurvivor: survivor }));
-            // setMaxSurvivor(survivor)
-        }
-    }, [survivor, maxSurvivor])
 
     //!SECTION
     /* -------------------------------------------------------------------------- */
@@ -85,12 +67,12 @@ export function Game({onGameOver}) {
     /* -------------------------------------------------------------------------- */
     // function handleCell(key, position){
     function handleCell(key){
+        console.log({key});
         if(mapData[key.y][key.x].type == "empty" && wood >= 5){
+            // TODO - Faire une fonction de set pour la map
             mapData[key.y][key.x] = {type : 'house'};
-            useRessource.setState(() => ({ survivor : survivor + 2 }));
-            useRessource.setState(() => ({ wood : wood + 2 }));
+            addSurvivor(2);
         }
-        setMapdata(mapData)
     }
 
     //!SECTION
