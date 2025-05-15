@@ -1,6 +1,8 @@
 import { Cell } from './Cell'
+import { useStore } from '../store/store';
 
-export function Map({mapData, handleCell}){
+export function Map({handleCell}){
+    const { mapData } = useStore();
     return (
         <div className={`grid max-h-lvh grid-cols-5 gap-2`}>
             {mapData.map((row, indexRow)=>

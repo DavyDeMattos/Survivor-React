@@ -2,8 +2,10 @@ import SurvivorIcon from '../assets/img/icons/survivor.svg'
 import MeatIcon from '../assets/img/icons/meat.svg'
 import WoodIcon from '../assets/img/icons/wood.svg'
 import StoneIcon from '../assets/img/icons/stone.svg'
+import { useStore } from '../store/store';
 
-export function GameUi({survivor, maxSurvivor, meat, wood, stone}) {
+export function GameUi() {
+    const { survivor, maxSurvivor, meat, wood, stone } = useStore();
     const widthIcon = "w-10"
     const textResource = "bg-white text-blue-700 text-m font-medium border-2 border-white rounded-lg px-2 py-1 me-5"
     return (

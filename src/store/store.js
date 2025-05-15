@@ -14,21 +14,11 @@ export const useStore = create ((set, get) => ({
     /* -------------------------------------------------------------------------- */
     /*                             //SECTION - Setter                             */
     /* -------------------------------------------------------------------------- */
-    setSurvivor: (number) => {
-        set({survivor : number})
-    },
-    setMaxSurvivor: (number) => {
-        set({maxSurvivor : number})
-    },
-    setMeat: (number) => {
-        set({meat : number})
-    },
-    setWood: (number) => {
-        set({wood : number})
-    },
-    setStone: (number) => {
-        set({stone : number})
-    },
+    setSurvivor: (survivor) => set({survivor}),
+    setMaxSurvivor: (maxSurvivor) => set({maxSurvivor}),
+    setMeat: (meat) => set({meat}),
+    setWood: (wood) => set({wood}),
+    setStone: (stone) => set({stone}),
     //!SECTION
     /* -------------------------------------------------------------------------- */
     /*                          //SECTION - Add Function                          */
@@ -54,32 +44,48 @@ export const useStore = create ((set, get) => ({
         });
     },
     addMaxSurvivor: (number) => {
-        const survivor = get().survivor;
-        const maxSurvivor = get(maxSurvivor);
+        const { survivor, maxSurvivor } = get();
         set({maxSurvivor : maxSurvivor + number});
         if(survivor >= maxSurvivor){
             set({survivor : maxSurvivor})
         }
     },
     addMeat: (number) => {
-        const meat = get().meat;
+        const {meat} = get();
         (meat + number < 0) ? set({meat : 0}) : set({meat : meat + number});
     },
     decreaseMeat: () => {
-        const survivor = get().survivor;
-        const meat = get().meat;
+        const { survivor, meat } = get();
         set({meat : meat - survivor})
     },
     addWood: (number) => {
-        const wood = get().wood;
+        const {wood} = get();
         (wood + number < 0) ? set({wood : 0}) : set({wood : wood + number});
     },
     addStone: (number) => {
-        const stone = get().stone;
+        const {stone} = get();
         (stone + number < 0) ? set({stone : 0}) : set({stone : stone + number});
     },
     //!SECTION
-    clear: () => set({ 
+    //SECTION - Get
+    getAvaibleSurvivor: () => {
+        get().survivor;
+    },
+    //!SECTION
+    //SECTION - Manipulation de la map
+    handleCell: (key)=> {
+        console.log({key});
+        if(mapData[key.y][key.x].type == "empty" && wood >= 5){
+            // TODO - Faire une fonction de set pour la map
+            mapData[key.y][key.x] = {type : 'house'};
+            addSurvivor(2);
+        }
+    },
+    // createHouse()
+    // updateCellType()
+    
+    //!SECTION
+    reset: () => set({ 
         survivor : 0,
         maxSurvivor : 0,
         meat : 10,

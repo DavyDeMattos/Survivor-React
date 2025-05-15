@@ -7,7 +7,8 @@ import { useStore } from '../store/store';
 import questsList from '../assets/data/quests.json';
 
 export function Game({onGameOver}) {
-    const { survivor,addSurvivor,maxSurvivor,meat,wood,stone, mapData, clear, decreaseMeat, setMeat, } = useStore();
+    const { meat,wood, mapData } = useStore();
+    const { addSurvivor, reset, decreaseMeat, setMeat, } = useStore();
 
     const [time, setTime] = useState(0);
 
@@ -37,13 +38,13 @@ export function Game({onGameOver}) {
 
     //NOTE - Timer diminuant la nourriture par survivant
     useEffect(() => {
-        clear();
+        reset();
         const interval = setInterval(()=>{
             setTime((prev) => prev + 1);
         },1000);
         return () => {
             clearInterval(interval);
-            clear();
+            reset();
         }
     },[]);
 
@@ -81,18 +82,12 @@ export function Game({onGameOver}) {
         <div className="w-full h-full flex flex-col justify-start items-center bg-blue-50 p-2">
             <div className="flex items-start w-full gap-2">
                 <QuestsList quests={quests} onValidateQuest={handleCheckboxChange}/>
-                <GameUi
-                    survivor={survivor}
-                    maxSurvivor={maxSurvivor}
-                    meat={meat}
-                    wood={wood}
-                    stone={stone}
-                />
+                <GameUi />
             </div>
             <h1>Game</h1>
             <button type="button" onClick={updateMeat}>Add Food</button>
             <button type="button" onClick={updateSurvivor}>Add Survivor</button>
-            <Map mapData={mapData} handleCell={handleCell}/>
+            <Map handleCell={handleCell}/>
         </div>
     )
 }
