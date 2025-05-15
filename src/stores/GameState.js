@@ -13,6 +13,7 @@ export const useGameState = create((set, get) => ({
     time: 0,
     cells: [...defaultMap],
     currentScore: 0,
+    version: '0.0.1',
     // Getters
     getAvailablePeople: () => {
         return get().people;

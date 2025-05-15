@@ -2,13 +2,14 @@
 import { Menu } from './components/Menu'
 import { Game } from './components/Game'
 import { GameOver } from './components/GameOver'
+import { NotFoundPage } from './components/NotFoundPage'
 import { useState } from 'react';
 import { useGameState } from "@/stores/GameState";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 function App() {
 
-  const version = '0.0.1';
-  const {currentScore} = useGameState();
+  // const version = '0.0.1';
+  const {version, currentScore} = useGameState();
 
   const [leaderboard, setLeaderboard] = useState([
     { name: 'Player 1', score: 10 },
@@ -32,7 +33,7 @@ function App() {
         <Route path="/" element={<Menu version={version} />} />
         <Route path="/game" element={<Game />} />
         <Route path="/gameover" element={<GameOver leaderboard={leaderboard} onLeaderboardEntry={handleLeaderboardEntry}/>} />
-
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
       {/* {status === 'menu' && <Menu version={version} onPlay={handlePlay} />} */}
