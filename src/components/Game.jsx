@@ -41,7 +41,7 @@ export function Game() {
     // states
     const { food , time } = useGameState();
     // actions
-    const { addTime, consumeFood, reset, setCurrentScore } = useGameState();
+    const { addTime, consumeFood, reset, setCurrentScore, ressourceFromForest } = useGameState();
 
     const [quests, setQuests] = useState(defaultQuests);
 
@@ -68,7 +68,10 @@ export function Game() {
     },[]);
 
     useEffect(() => {
-        if(time % 1 == 0){
+        if(time % 2 == 0){
+            ressourceFromForest();
+        }
+        if(time % 4 == 0){
             if(food <= 1){
                 handleGameOver(time);
             }

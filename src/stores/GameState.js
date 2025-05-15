@@ -15,8 +15,38 @@ export const useGameState = create((set, get) => ({
     currentScore: 0,
     version: '0.0.1',
     // Getters
+    getDataFromCells: () => {
+        const cells = get().cells;
+        
+        // Objet qui contiendra tous les attributs calculés
+        const result = {
+            people: 0,
+            // Ajoutez ici d'autres attributs initialisés à leur valeur par défaut
+            // Par exemple:
+            // resources: 0,
+            // buildings: 0,
+            // vehicles: 0
+        };
+        
+        // Parcourir le tableau une seule fois pour calculer tous les attributs
+        for (let i = 0; i < cells.length; i++) {
+            for (let j = 0; j < cells[i].length; j++) {
+                const cell = cells[i][j];
+                
+                // Accumuler chaque attribut
+                result.people += cell.people || 0;
+                // Ajoutez des conditions similaires pour d'autres attributs
+                // result.resources += cell.resources || 0;
+                // result.buildings += cell.buildings || 0;
+                // result.vehicles += cell.vehicles || 0;
+            }
+        }
+        return result;
+    },
     getAvailablePeople: () => {
-        return get().people;
+        const people = get().people;
+        const getDataFromCells = get().getDataFromCells;
+        return people - getDataFromCells().people;
     },
     // Setters
     setStone: (stone) => set({ stone }),
@@ -41,7 +71,18 @@ export const useGameState = create((set, get) => ({
         const { food, people } = get();
         set({ food: food - people });
     },
-    createHouse(cell){
+    ressourceFromForest(){
+        const { food, wood } = get();
+        const { getDataFromCells } = get();
+        const total = getDataFromCells().people;
+        if(total > 0){
+            set({
+                food: (food + (1 * total)),
+                wood: (wood + (1 * total)),
+            })
+        }
+    },
+    createHouse : (cell)=> {
         const { wood, people } = get();
 
         if(wood >= 5){
@@ -50,16 +91,24 @@ export const useGameState = create((set, get) => ({
         }
         return cell;
     },
-    assignPeopleToForest(cell){
-        const { people } = get();
-        console.log("cell.people")
-        console.log({cell})
-        if(people > 0){
+    assignPeopleToForest: (cell) => {
+        const getAvailablePeople = get().getAvailablePeople;
+        console.log(getAvailablePeople());
+        if(getAvailablePeople() > 0){
             // set({ people: people -1 });
             cell.people = cell.people + 1;
         }
         return cell;
     },
+    // getNumberPeopleInForest: () => {
+    //     const cells  = get().cells;
+    //     let number = cells.reduce((total, row) => {
+    //         return total + row.reduce((rowTotal, cell) => rowTotal + cell.people, 0);
+    //       }, 0);
+    //       console.log({number})
+    //     number = isNaN(number) ? 0 : number
+    //     return number;      
+    // },
     updateCellType: (position) => {
         const cells  = get().cells;
         const { createHouse, assignPeopleToForest} = get();
