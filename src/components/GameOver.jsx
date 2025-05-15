@@ -1,83 +1,66 @@
-import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import GameOverIcon from '../assets/img/icons/skull.svg';
+import { useState } from 'react';
 
-export function GameOver({ timeScore, leaderboard, onPlay, onRestart,  }){
+export function GameOver({ leaderboard, onLeaderboardEntry }){
     
-    // console.log({
-    //     timeScore,
-    //     leaderboard,
-    // })
-    const [namePlayer, setNamePlayer] = useState();
-    const [buttonIsDisabled, setButtonIsDisabled ] = useState(true);
-    const [displayLeaderboard, setDisplayLeaderboard] = useState(new Array(1).fill({ name: 'Player', score : 100 }));
+    const [canRestart, setCanRestart] = useState(false);
+    const [name, setName] = useState('');
 
-    // setDisplayLeaderboard(leaderboard.slice(0, 5));
-    console.log(displayLeaderboard)
-    useEffect(()=>{
-        setButtonIsDisabled((namePlayer === undefined || namePlayer.length < 3) ? true : false);
-        // console.log(namePlayer);
-    }, [namePlayer])
-
-
-    function handleSubmit(e){
-        e.preventDefault();
-        // if
-        console.log(namePlayer.length)
+    function handleSubmit(event){
+        event.preventDefault();
+        onLeaderboardEntry(name);
+        setCanRestart(true);
+        
     }
+
     return (
-        <div className="w-full h-full flex flex-col justify-center items-center bg-blue-300">
+        <nav className="w-full h-full flex flex-col justify-center items-center bg-blue-300">
             <img className="w-16" src={GameOverIcon} />
             <h1 className="text-white font-bold text-6xl">
                 Game Over
             </h1>
-            <h2 className="rotate-5 ml-16 mb-8 text-white animate-pulse">
-                {/* { subtitle } */}
+            <h2 className="mb-8 text-white">
+                Leaderboard
             </h2>
-            
-
-
-
-            <div className="flex flex-col items-stretch max-w-md gap-2 my-4">
-                <form className=" mx-auto flex flex-row" onSubmit={handleSubmit}>
-                    <div className="mb-5">
-                        <input type="text" id="base-input" placeholder='Entrez votre nom' value={namePlayer} onChange={(e)=>setNamePlayer(e.target.value)} className="bg-blue-50 border border-blue-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-blue-700 dark:border-blue-600 dark:placeholder-blue-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                    </div>
-                    <button type="submit" disabled={buttonIsDisabled} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-50" >Envoyer</button>
+            { canRestart && <div className="flex flex-col items-stretch max-w-md gap-2 my-4">
+                <Link 
+                    className="bg-white rounded px-4 py-2 w-32" 
+                    to="/game"
+                >
+                    Rejouer
+                </Link>
+            </div>}
+            { 
+                !canRestart && <form className="flex items-center mb-4" onSubmit={handleSubmit}>
+                    <input 
+                        type="text" 
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Entrez votre nom" 
+                        className="border-2 border-blue-200 rounded px-4 py-2 w-72"
+                    />
+                    <button 
+                        type="submit" 
+                        className="bg-white rounded px-4 py-2 ml-2"
+                        disabled={name.length < 3}
+                    >
+                        Envoyer
+                    </button>
                 </form>
-
-                {/* <div className="grid max-h-lvh grid-cols-1 gap-0.5 relative overflow-x-auto shadow-md rounded-lg">
-                    {displayLeaderboard.map((player, indexRow)=>
-                        <div key={indexRow} className='bg-gray-400 p-1'>
-                            <h5>{player.name}</h5>
-                            <p>score : {player.score}</p>
-                        </div>
-                    )}
-                </div> */}
-
-
-
-                <div className="flex flex-col items-stretch max-w-md gap-2 my-4">
-                    <button
-                        className="bg-white rounded px-4 py-2"
-                        onClick={onPlay}
-                    >
-                        Play
-                    </button>
-                    <button
-                        className="bg-white rounded px-4 py-2"
-                        // onClick={handleCreditsClick}
-                    >
-                        Credits
-                    </button>
-                    <button
-                        className="bg-white rounded px-4 py-2"
-                        onClick={onRestart}
-                    >
-                        Menu
-                    </button>
-                </div>
-            </div>
-            {/* <p className="text-white">v{version}</p> */}
-        </div>
+            }
+            <ul className="bg-blue-100 flex flex-col items-center rounded-xl border-1 border-blue-200 w-72">
+                {
+                    leaderboard.map((player, index) => (
+                        <li key={index} className="flex w-full p-4 border-b border-blue-200 last:border-b-0 items-center">
+                            <div className="flex flex-col flex-1">
+                                <p className="font-bold leading-none text-sm">{player.name}</p>
+                                <p className="leading-none text-xs">Score: {player.score}</p>
+                            </div>
+                        </li>
+                    ))
+                }
+                </ul>
+        </nav>
     )
 }

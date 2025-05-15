@@ -1,37 +1,46 @@
-import './App.css'
+
 import { Menu } from './components/Menu'
 import { Game } from './components/Game'
 import { GameOver } from './components/GameOver'
-import leaderboard from './assets/data/leaderboard.json'
-
-import { useState } from 'react'
+import { useState } from 'react';
+import { useGameState } from "@/stores/GameState";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 function App() {
-  const version = 'v0.0.1'
-  const [timeScore, setTimeScore] = useState(0);
 
-  //SECTION - States
-  const [status, setStatus] = useState('menu');
-  function handlePlay() {
-    setStatus('game');
-  }
+  const version = '0.0.1';
+  const {currentScore} = useGameState();
 
-  function handleGameOver(time) {
-    setTimeScore(time);
-    setStatus('gameover');
-  }
+  const [leaderboard, setLeaderboard] = useState([
+    { name: 'Player 1', score: 10 },
+    { name: 'Player 2', score: 5 },
+    { name: 'Player 3', score: 2 }
+  ]);
 
-  function handleRestart() {
-    setStatus('menu');
+  function handleLeaderboardEntry(name) {
+    const newEntry = { name, score: currentScore};
+    const newLeaderboard = [...leaderboard, newEntry]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    setLeaderboard(newLeaderboard);
   }
 
 
   return (
     <>
-      {status === 'menu' && <Menu version={version} onPlay={handlePlay}/>}
-      {status === 'game' && <Game onGameOver={handleGameOver} />}
-      {status === 'gameover' && <GameOver timeScore={timeScore} leaderboard={leaderboard} onPlay={handlePlay} onRestart={handleRestart} />}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Menu version={version} />} />
+        <Route path="/game" element={<Game />} />
+        <Route path="/gameover" element={<GameOver leaderboard={leaderboard} onLeaderboardEntry={handleLeaderboardEntry}/>} />
+
+      </Routes>
+    </BrowserRouter>
+      {/* {status === 'menu' && <Menu version={version} onPlay={handlePlay} />} */}
+      {/* {status === 'game' && <Game onGameOver={handleGameOver} />}
+      {status === 'gameover' && <GameOver onRestart={handlePlay} leaderboard={leaderboard} onLeaderboardEntry={handleLeaderboardEntry}/>} */}
     </>
   )
+
 }
 
 export default App

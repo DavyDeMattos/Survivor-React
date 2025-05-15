@@ -1,93 +1,94 @@
-import { useEffect, useState } from 'react';
-import { GameUi } from './GameUi';
-import { QuestsList } from './QuestsList';
-import { Map } from './Map';
-import { useStore } from '../store/store';
+import { QuestList } from "./QuestList";
+import { ResourcePanel } from "./ResourcePanel";
+import { Map } from "./Map";
+import { useEffect, useState } from "react";
+import { useGameState } from "@/stores/GameState";
+import { useNavigate } from "react-router-dom";
 
-import questsList from '../assets/data/quests.json';
-
-export function Game({onGameOver}) {
-    const { meat,wood, mapData } = useStore();
-    const { addSurvivor, reset, decreaseMeat, setMeat, } = useStore();
-
-    const [time, setTime] = useState(0);
-
-
-    function updateMeat() {
-        setMeat(50)
+const defaultQuests = [
+    {
+        id: 1,
+        name: "Une bonne nuit de sommeil",
+        description: "Créez une cabane pour loger les premiers aventuriers.",
+        completed: false,
+    },
+    {
+        id: 2,
+        name: "Envoyer les aventurier en forêt",
+        description: "Pour gagner du bois et de la nourriture",
+        completed: false,
+    },
+    {
+        id: 3,
+        name: "Construisez une nouvelle cabane",
+        description: "Il faut agrandir la colonie",
+        completed: false,
+    },
+    {
+        id: 4,
+        name: "Créez une ferme",
+        description: "Pour gagner de la nourriture",
+        completed: false,
+    },
+    { id: 5,
+        name: "Créez une scierie",
+        description: "Pour gagner du bois",
+        completed: false,
     }
-    function updateSurvivor() {
-        addSurvivor(5);
-    }
+];
 
-    const [quests, setQuests] = useState(questsList);
+export function Game() {
+    // states
+    const { food , time } = useGameState();
+    // actions
+    const { addTime, consumeFood, reset, setCurrentScore } = useGameState();
 
-    function handleCheckboxChange(questId) {
-        setQuests((prevQuests) => {
-            return prevQuests.map((quest) => {
-                if (quest.id === parseInt(questId)) {
-                    return {
-                        ...quest,
-                        isFinished: "completed",
-                    };
-                }
-                return quest;
-            });
+    const [quests, setQuests] = useState(defaultQuests);
+
+    const navigate = useNavigate();
+
+
+    function handleValidateQuest(questId){
+        const updatedQuests = quests.map((quest) => {
+            if (quest.id === questId) {
+                quest.completed = true;
+            }
+            return quest;
         });
-    }
+        setQuests(updatedQuests);
+    };
 
-    //NOTE - Timer diminuant la nourriture par survivant
     useEffect(() => {
         reset();
         const interval = setInterval(()=>{
-            setTime((prev) => prev + 1);
+            addTime(1);
         },1000);
         return () => {
             clearInterval(interval);
-            reset();
         }
     },[]);
 
     useEffect(() => {
         if(time % 1 == 0){
-            decreaseMeat();
+            if(food <= 1){
+                handleGameOver(time);
+            }
+            consumeFood();
         }
     }, [time]);
 
-    useEffect(()=>{
-        if(meat < 0){
-            setMeat(0);
-            onGameOver(time);
-        }
-    }, [meat])
-    
-
-    //!SECTION
-    /* -------------------------------------------------------------------------- */
-    /*                               //SECTION - Map                              */
-    /* -------------------------------------------------------------------------- */
-    // function handleCell(key, position){
-    function handleCell(key){
-        console.log({key});
-        if(mapData[key.y][key.x].type == "empty" && wood >= 5){
-            // TODO - Faire une fonction de set pour la map
-            mapData[key.y][key.x] = {type : 'house'};
-            addSurvivor(2);
-        }
-    }
-
-    //!SECTION
+    function handleGameOver(time) {
+        setCurrentScore(time);
+        navigate("/gameover");
+      }
 
     return (
         <div className="w-full h-full flex flex-col justify-start items-center bg-blue-50 p-2">
             <div className="flex items-start w-full gap-2">
-                <QuestsList quests={quests} onValidateQuest={handleCheckboxChange}/>
-                <GameUi />
+                <QuestList quests={quests} onValidateQuest={handleValidateQuest} />
+                <ResourcePanel/>
             </div>
-            <h1>Game</h1>
-            <button type="button" onClick={updateMeat}>Add Food</button>
-            <button type="button" onClick={updateSurvivor}>Add Survivor</button>
-            <Map handleCell={handleCell}/>
+            <Map />
         </div>
-    )
+    );
 }
