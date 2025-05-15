@@ -28,7 +28,7 @@ function App() {
 
   return (
     <>
-    <BrowserRouter>
+    <BrowserRouter basename="/Survivor-React/">
       <Routes>
         <Route path="/" element={<Menu version={version} />} />
         <Route path="/game" element={<Game />} />
