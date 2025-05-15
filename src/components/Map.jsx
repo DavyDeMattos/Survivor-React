@@ -6,7 +6,9 @@ export function Map() {
 
     function handleClick(position) {
         // Try create house
-        updateCellType('house', position);
+        updateCellType(position);
+        console.log({cells})
+        // updateCellType('house', position);
     }
 
     return (

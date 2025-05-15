@@ -59,7 +59,6 @@ export function Game() {
     };
 
     useEffect(() => {
-        reset();
         const interval = setInterval(()=>{
             addTime(1);
         },1000);
@@ -79,6 +78,7 @@ export function Game() {
 
     function handleGameOver(time) {
         setCurrentScore(time);
+        reset();
         navigate("/gameover");
       }
 

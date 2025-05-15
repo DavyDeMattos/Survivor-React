@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-const defaultMap = new Array(5).fill(null).map(() => new Array(5).fill({ type: 'empty' }));
-defaultMap[0][0] = { type: 'forest' };
-defaultMap[4][4] = { type: 'forest' };
+const defaultMap = new Array(5).fill(null).map(() => new Array(5).fill({ type: 'empty', people: 0 }));
+defaultMap[0][0] = { type: 'forest', people: 0 };
+defaultMap[4][4] = { type: 'forest', people: 0 };
 
 export const useGameState = create((set, get) => ({
     // State
@@ -10,6 +10,7 @@ export const useGameState = create((set, get) => ({
     wood: 10,
     food: 10,
     people: 0,
+    maxPeople: 0,
     time: 0,
     cells: [...defaultMap],
     currentScore: 0,
@@ -23,6 +24,7 @@ export const useGameState = create((set, get) => ({
     setWood: (wood) => set({ wood }),
     setFood: (food) => set({ food }),
     setPeople: (people) => set({ people }),
+    setMaxPeople: (maxPeople) => set({ maxPeople }),
     setCurrentScore: (currentScore) => set({ currentScore }),
     addTime: (val) => set(() => ({ time: get().time + val })),
     reset: () =>{
@@ -49,17 +51,40 @@ export const useGameState = create((set, get) => ({
         }
         return cell;
     },
-    updateCellType: (newType, position) => {
+    assignPeopleToForest(cell){
+        const { people } = get();
+        console.log("cell.people")
+        console.log({cell})
+        if(people > 0){
+            set({ people: people -1 });
+            cell.people = cell.people + 1;
+        }
+        return cell;
+    },
+    updateCellType: (position) => {
         const cells  = get().cells;
-        const createHouse = get().createHouse;
+        const { createHouse, assignPeopleToForest} = get();
 
         const updatedCells = cells.map((row) => row.map((cell) => ({ ...cell })));
         let cell = updatedCells[position.y][position.x];
-        if(cell.type != 'empty'){
-            return;
-        }
-        if(newType === 'house'){
-            cell = createHouse(cell);
+        // if(cell.type != 'empty'){
+        //     return;
+        // }
+        // if(newType === 'house'){
+        //     cell = createHouse(cell);
+        // }
+
+        switch (cell.type) {
+            case 'empty':
+                cell = createHouse(cell);
+                break;
+            case 'forest':
+                cell = assignPeopleToForest(cell);
+                break;
+        
+            default:
+                return;
+                // break;
         }
         updatedCells[position.y][position.x] = cell;
         set({ cells: updatedCells });
